@@ -1,0 +1,84 @@
+body {
+    margin-top: 9%;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/library.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px); /* Adjust blur strength (e.g., 8px) */
+    z-index: -1; /* Place behind all content */
+  }
+
+  .form-step {
+    display: none;
+  }
+  .form-step.active {
+    display: block;
+  }
+  .form-container {
+    max-width: 700px;
+    margin: auto;
+    margin-top: 140px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+    counter-reset: step;
+  }
+  .step-indicator span {
+    position: relative;
+    flex-grow: 1;
+    text-align: center;
+    color: #6c757d;
+  }
+  .step-indicator span::before {
+    counter-increment: step;
+    content: counter(step);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    display: inline-block;
+    background: #dee2e6;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  .step-indicator span::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #dee2e6;
+  z-index: -1;
+}
+.step-indicator span:last-child::after {
+  content: none; 
+}
+  .step-indicator .active::before {
+    background: #198754;
+    color: #fff;
+  }
+  .step-indicator .active {
+    font-weight: 600;
+    color: #198754;
+  }
+
+  .step-indicators-container {
+  overflow: hidden;
+  position: relative;
+}
