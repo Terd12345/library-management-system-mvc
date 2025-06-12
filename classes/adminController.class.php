@@ -1,8 +1,8 @@
 <?php
 
 class AdminController extends AdminModel {
-    public function InsertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description) {
-        parent::insertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description);
+    public function InsertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description, $status = 'Available') {
+        parent::InsertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description, $status);
     }
 
     public function AddBookController() {
@@ -28,7 +28,8 @@ class AdminController extends AdminModel {
             $genre = $_POST['genre'];
             $language = $_POST['language'];
             $description = $_POST['description'];
-            $this->InsertBook($targetFile, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description);
+            $status = 'Available';
+            $this->InsertBook($targetFile, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description, $status);
         }
     }
 
@@ -37,6 +38,11 @@ class AdminController extends AdminModel {
         return $model->getBookById($id);
     }
 
+
+    public function getAccountById($id){
+        $model = new AdminModel();
+        return $model->getAccountById($id);
+    }
 
     public function updateBookController($id) {
     $book = $this->getBookById($id);
@@ -68,6 +74,10 @@ class AdminController extends AdminModel {
 
     public function deleteBookController($id) {
         return $this->deleteBook($id);
+    }
+
+    public function deleteAccountController($id){
+        return $this->deleteAccount($id);
     }
 
 }

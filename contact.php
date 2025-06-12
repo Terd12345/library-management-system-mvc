@@ -9,35 +9,16 @@
 </head>
 <body>
 
-<style>
-    .contact-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.contact-form .form-control {
-    margin-bottom: 15px;
-    padding: 10px;
-    font-size: 14px;
-}
-
-.contact-form button {
-    padding: 10px 20px;
-    font-size: 16px;
-}
-</style>
 
 
-    <?php
-    include 'includes/classloader.inc.php';
+<?php
+include 'includes/classloader.inc.php';
 
-    $indexObj = new IndexView();
-    $indexObj->HeaderIndex();
-    $indexObj->contactPage();
-    $indexObj->FooterIndex();
-    ?>
-
+$indexObj = new IndexView();
+$indexObj->HeaderIndex();
+$indexObj->contactPage();
+$indexObj->FooterIndex();
+?>
 
 </body>
 </html>

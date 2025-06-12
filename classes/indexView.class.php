@@ -6,12 +6,16 @@ class IndexView {
         $currentPage = basename($_SERVER['PHP_SELF']); // Get the current page name
     
         echo '
-        <div class="hold">
+          <div class="hold">
             <div class="header">
                 <div class="container">
                     <div id="logo">
                         <img src="assets/images/logo.jpg" alt="Library Logo" height="60px" width="60px">
                     </div>
+
+                    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+                    <label for="nav-toggle" class="nav-toggle-label">&#9776;</label>
+
                     <ul class="nav">
                         <li><a href="index.php" class="' . ($currentPage == 'index.php' ? 'active' : '') . '">Home</a></li>
                         <li><a href="about.php" class="' . ($currentPage == 'about.php' ? 'active' : '') . '">About</a></li>
@@ -252,40 +256,40 @@ class IndexView {
         echo '
         
         <div class="section">
-        <div class="slider">
-            <div class="container slidercontent">
+    <div class="slider">
+        <div class="container slidercontent">
             <div class="gray-hero-box">
                 <h1 class="hero">Contact Us</h1>
-                <h2 class="hero">"Wed love to hear from you! Reach out to us for any inquiries or support."</h2>
+                <h2 class="hero">Wed love to hear from you! Reach out to us for any inquiries or support.</h2>
             </div>
-            </div>
-        </div>
-        </div>
-
-    <div class="section bg">
-        <div class="container">
-            <h1>Get in Touch</h1>
-            <form action="process_contact.php" method="POST" class="contact-form">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="email">Your Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="message">Your Message</label>
-                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center mt-3">
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </div>
-            </form>
         </div>
     </div>
+</div>
+
+<div class="section bg">
+    <div class="container">
+        <h1>Get in Touch</h1>
+        <form action="process_contact.php" method="POST" class="contact-form">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="col-12">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
+                </div>
+            </div>
+            <div class="d-flex mt-3">
+                <button type="submit" class="btn-primary">Send Message</button>
+            </div>
+        </form>
+    </div>
+</div>
         
         ';
 
@@ -529,10 +533,10 @@ class IndexView {
               <a class="nav-link ' . ($currentPage === "index.php" ? "active" : "") . '" href="index.php">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ' . ($currentPage === "borrowed-books.php" ? "active" : "") . '" href="borrowed-books.php">Borrowed Books</a>
+              <a class="nav-link ' . ($currentPage === "browse-books.php" ? "active" : "") . '" href="browse-books.php">Browse Books</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ' . ($currentPage === "browse-books.php" ? "active" : "") . '" href="browse-books.php">Browse Books</a>
+              <a class="nav-link ' . ($currentPage === "borrowed-books.php" ? "active" : "") . '" href="borrowed-books.php">Borrowed Books</a>
             </li>
             <li class="nav-item">
               <a class="nav-link ' . ($currentPage === "notifications.php" ? "active" : "") . '" href="notifications.php">Notifications</a>
@@ -592,6 +596,99 @@ class IndexView {
     ';
 }
 
+    public function browseBook(){
+
+      // Display all books for users as cards
+echo '<div class="container mt-5 mb-5">';
+echo '<h3 class="mb-4">Browse Books</h3>';
+$books = (new AdminModel())->getAllBooks();
+if (count($books) === 0) {
+    echo '<div class="alert alert-info">No books found.</div>';
+} else {
+    echo '<div class="row g-4">';
+    foreach ($books as $book) {
+        $imgPath = !empty($book['background_image']) ? '../uploads/' . htmlspecialchars($book['background_image']) : '../assets/images/sample-book.jpg';
+        $status = isset($book['status']) ? strtolower(trim($book['status'])) : 'available';
+        $statusBadge = $status === 'unavailable'
+            ? '<span class="badge bg-danger">Unavailable</span>'
+            : '<span class="badge bg-success">Available</span>';
+        echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3">';
+        echo '<a href="book-details.php?id=' . urlencode($book['id']) . '" class="text-decoration-none text-dark">';
+        echo '<div class="card book-card h-100">';
+        echo '<img src="' . $imgPath . '" class="book-img card-img-top" alt="Book Image">';
+        echo '<div class="card-body d-flex flex-column">';
+        echo '<div class="book-title">' . htmlspecialchars($book['book_title']) . '</div>';
+        echo '<div class="book-author">by ' . htmlspecialchars($book['author']) . '</div>';
+        echo '<div class="book-meta mb-2">ISBN: ' . htmlspecialchars($book['isbn']) . '</div>';
+        echo '<div class="book-meta mb-2">Publisher: ' . htmlspecialchars($book['publisher']) . '</div>';
+        echo '<div class="book-meta mb-2">Year: ' . htmlspecialchars($book['publication_year']) . '</div>';
+        echo '<div class="book-meta mb-2">Genre: ' . htmlspecialchars($book['genre']) . '</div>';
+        echo '<div class="book-meta mb-2">Language: ' . htmlspecialchars($book['language']) . '</div>';
+        echo '<div class="mt-auto">' . $statusBadge . '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</a>';
+        echo '</div>';
+    }
+    echo '</div>';
+}
+echo '</div>';
+    
+    }
+
+
+    public function bookDetails($book)
+{
+    $imgPath = !empty($book['background_image']) ? '../uploads/' . htmlspecialchars($book['background_image']) : '../assets/images/sample-book.jpg';
+    $status = isset($book['status']) ? strtolower(trim($book['status'])) : 'available';
+
+    echo '<div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="row g-0">
+                        <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+                            <img src="' . $imgPath . '" alt="Book Image" class="img-fluid rounded" style="max-height:320px; object-fit:cover;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title mb-2">' . htmlspecialchars($book['book_title']) . '</h3>
+                                <h5 class="card-subtitle mb-3 text-muted">by ' . htmlspecialchars($book['author']) . '</h5>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item"><strong>ISBN:</strong> ' . htmlspecialchars($book['isbn']) . '</li>
+                                    <li class="list-group-item"><strong>Publisher:</strong> ' . htmlspecialchars($book['publisher']) . '</li>
+                                    <li class="list-group-item"><strong>Publication Year:</strong> ' . htmlspecialchars($book['publication_year']) . '</li>
+                                    <li class="list-group-item"><strong>Genre:</strong> ' . htmlspecialchars($book['genre']) . '</li>
+                                    <li class="list-group-item"><strong>Language:</strong> ' . htmlspecialchars($book['language']) . '</li>
+                                    <li class="list-group-item"><strong>Status:</strong> ';
+
+    echo $status === 'unavailable'
+        ? '<span class="badge bg-danger">Unavailable</span>'
+        : '<span class="badge bg-success">Available</span>';
+
+    echo '</li>
+                                </ul>
+                                <div class="mb-3">
+                                    <strong>Description:</strong>
+                                    <p class="mt-2">' . nl2br(htmlspecialchars($book['description'])) . '</p>
+                                </div>
+                                <a href="browse-books.php" class="btn btn-outline-primary mt-2">&larr; Back to Browse</a>';
+
+    if ($status !== 'unavailable') {
+        echo '<button id="borrowBtn" class="btn btn-success mt-2 ms-2">Borrow this Book</button>';
+    }
+
+    echo '              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+
+
+
     public function libraryDashboardFooter(){
 
       echo '
@@ -614,8 +711,10 @@ public function adminDashboardHeader(){
         <div class="title">Library Dashboard</div>
         <a href="index.php"><i class="fas fa-home"></i> <span class="d-none d-lg-inline">Home</span></a>
         <a href="add-book.php"><i class="fas fa-book"></i> <span class="d-none d-lg-inline">Add Books</span></a>
-        <a href="manage-accounts.php"><i class="fas fa-cogs"></i> <span class="d-none d-lg-inline">Manage Accounts</span></a>
+        <a href="#"><i class="fas fa-arrow-right-from-bracket"></i> <span class="d-none d-lg-inline">Borrowed</span></a>
+        <a href="#"><i class="fas fa-rotate-left"></i> <span class="d-none d-lg-inline">Returned</span></a>
         <a href="#"><i class="fas fa-calendar"></i> <span class="d-none d-lg-inline">Due Dates</span></a>
+        <a href="manage-accounts.php"><i class="fas fa-cogs"></i> <span class="d-none d-lg-inline">Manage Accounts</span></a>
         <a href="#"><i class="fas fa-bell"></i> <span class="d-none d-lg-inline">Notifications</span></a>
          </div>
 
@@ -799,6 +898,7 @@ public function adminDashboardHeader(){
                     <th>Year</th>
                     <th>Genre</th>
                     <th>Language</th>
+                    <th>Status</th>
                     <th class="text-center">Action</th>
                   </tr>
                 </thead>
@@ -806,6 +906,13 @@ public function adminDashboardHeader(){
 
                 foreach ($books as $i => $book) {
                   $imgPath = !empty($book['background_image']) ? '../uploads/' . htmlspecialchars($book['background_image']) : '../assets/images/sample-book.jpg';
+
+                    // Determine status badge HTML
+                    $status = isset($book['status']) ? strtolower(trim($book['status'])) : 'available';
+                    $statusBadge = $status === 'unavailable'
+                      ? '<span class="badge bg-danger">Unavailable</span>'
+                      : '<span class="badge bg-success">Available</span>';
+
                   echo '
                   <tr class="clickable-row" data-href="book-details.php?id=' . htmlspecialchars($book['id']) . '">
                     <td>' . ($i + 1) . '</td>
@@ -817,6 +924,7 @@ public function adminDashboardHeader(){
                     <td>' . htmlspecialchars($book['publication_year']) . '</td>
                     <td>' . htmlspecialchars($book['genre']) . '</td>
                     <td>' . htmlspecialchars($book['language']) . '</td>
+                    <td>' . $statusBadge . '</td>
                     <td class="text-center align-middle"><i class="bi bi-chevron-right"></i></td>
                   </tr>';
                 }
@@ -896,8 +1004,8 @@ public function adminDashboardHeader(){
                         </div>
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a href="add-book.php" class="btn btn-secondary">Back to List</a>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                            <a href="delete-book.php?id=' . urlencode($book['id']) . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this book?\')">Delete</a>
+                            <button type="submit" class="btn btn-primary" id="updateBtn">Update</button>
+                            <a href="#" class="btn btn-danger" id="deleteBtn">Delete</a>
                         </div>
                     </form>
                 </div>
@@ -906,6 +1014,154 @@ public function adminDashboardHeader(){
     </div>';
 }
 
+
+    public function adminManageAccount(){
+
+      $accounts = (new AdminModel())->getAllAccounts();
+
+      echo '
+      
+      <div class="wrapper">
+        <div class="main-content">
+          <!-- Breadcrumbs -->
+          <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Manage Accounts</li>
+            </ol>
+          </nav>
+          <div class="container mt-2">
+            <div class="container-box">
+              <!-- Header with Add Button -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">User List</h4>
+              </div>
+
+              <!-- Table -->
+              <div class="table-responsive">
+                <table id="bookTable" class="table table-hover table-bordered align-middle">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Student ID</th>
+                      <th>Name</th>
+                      <th>Sex</th>
+                      <th>Email</th>
+                      <th>Address</th>
+                      <th class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+
+    foreach ($accounts as $account) {
+        echo '<tr class="clickable-row" data-href="account-details.php?id=' . htmlspecialchars($account['id']) . '">';
+        echo '<td>' . htmlspecialchars($account['stud_id']) . '</td>';
+        echo '<td>' . htmlspecialchars($account['full_name']) . '</td>';
+        echo '<td>' . htmlspecialchars($account['gender']) . '</td>';
+        echo '<td>' . htmlspecialchars($account['email']) . '</td>';
+        echo '<td>' . htmlspecialchars($account['address']) . '</td>';
+        echo '<td class="text-center align-middle"><i class="bi bi-chevron-right"></i></td>';
+        echo '</tr>';
+    }
+    
+    echo '</tbody></table></div></div></div></div></div>';
+    }
+
+
+    public function adminAccountDetails($account){
+
+      echo '
+      
+        <div class="wrapper">
+      <div class="main-content">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-4">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+            <li class="breadcrumb-item"><a href="manage-accounts.php">User List</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Manage Accounts</li>
+          </ol>
+        </nav>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h1>Account Details (' . htmlspecialchars($account['username']) . ')</h1>
+        <form action="#" method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="student_id" class="form-label">Student ID</label>
+                    <input type="text" class="form-control" id="student_id" name="student_id" value="' . htmlspecialchars($account['student_id']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" value="' . htmlspecialchars($account['full_name']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="gender" class="form-label">Gender</label>
+                    <input type="text" class="form-control" id="gender" name="gender" value="' . htmlspecialchars($account['gender']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="' . htmlspecialchars($account['email']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" value="' . htmlspecialchars($account['address']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city" value="' . htmlspecialchars($account['city']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="province" class="form-label">Province</label>
+                    <input type="text" class="form-control" id="province" name="province" value="' . htmlspecialchars($account['province']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="postal_code" class="form-label">Postal Code</label>
+                    <input type="text" class="form-control" id="postal_code" name="postal_code" value="' . htmlspecialchars($account['postal_code']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="department" class="form-label">Department</label>
+                    <input type="text" class="form-control" id="department" name="department" value="' . htmlspecialchars($account['department']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="year_level" class="form-label">Year Level</label>
+                    <input type="text" class="form-control" id="year_level" name="year_level" value="' . htmlspecialchars($account['year_level']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact" name="contact" value="' . htmlspecialchars($account['contact']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="text" class="form-control" id="dob" name="dob" value="' . htmlspecialchars($account['dob']) . '" disabled>
+                </div>
+                <div class="col-md-6">
+                    <label for="valid_id" class="form-label">Valid ID</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="valid_id" name="valid_id" value="' . htmlspecialchars($account['valid_id']) . '" disabled>';
+                if (!empty($account['valid_id'])) {
+                  $validIdPath = '../uploads/' . basename($account['valid_id']);
+                  if (file_exists($validIdPath)) {
+                    $ext = pathinfo($validIdPath, PATHINFO_EXTENSION);
+                    $downloadName = 'valid_id_' . $account['student_id'] . ($ext ? ('.' . $ext) : '');
+                    echo '<a href="' . $validIdPath . '" class="btn btn-outline-primary" download="' . $downloadName . '" target="_blank">Download</a>';
+                  } else {
+                    echo '<span class="text-danger ms-2">File not found</span>';
+                  }
+                }
+      echo '        </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <a href="#" class="btn btn-danger" id="deleteBtn">Delete</a>
+                  <a href="manage-accounts.php" class="btn btn-secondary">Back to List</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>';
+    }
 
 
     public function adminDashboardFooter(){
@@ -922,5 +1178,3 @@ public function adminDashboardHeader(){
 
     }
   }
-
- //  //  //  //  //  //  //  //  //  //  //  //  admin UI //  //  //  //  //  //  //  //  //  //  //  //

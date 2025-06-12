@@ -13,25 +13,23 @@ if (!isset($_SESSION['user_id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Library Dashboard</title>
   <link rel="stylesheet" href="../assets/css/lib-dashboard.css" />
+  <link rel="stylesheet" href="../assets/css/lib-browse-books.css" />
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body>
 
+<?php
+  include '../includes/classloader.inc.php';
 
-browse books
+  $obj = new IndexView();
 
-    <?php
+  $obj -> libraryDashboardHeader();
 
-    include '../includes/classloader.inc.php';
-    
-    $obj = new IndexView();
+  $obj -> browseBook();
 
-    $obj->libraryDashboardHeader();
-    $obj->libraryDashboardFooter();
-    
-    ?>
+  $obj -> libraryDashboardFooter();
 
-
+?>
 
 <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
 </body>

@@ -1,0 +1,29 @@
+Resolved studentId: 
+Exception: Student ID not found
+Resolved studentId: 
+Exception: Student ID not found
+Resolved studentId: 
+Exception: Student ID not found
+Resolved studentId: 
+Exception: Student ID not found
+Resolved studentId: 6
+Insert params: bookId=17, studentId=6, now=2025-06-10 12:09:19, due=2025-06-24 12:09:19
+Insert success!
+Resolved studentId: 9
+Insert params: bookId=16, studentId=9, now=2025-06-10 12:12:34, due=2025-06-24 12:12:34
+Insert success!
+Resolved studentId: 9
+Insert params: bookId=17, studentId=9, now=2025-06-10 12:14:47, due=2025-06-24 12:14:47
+Insert success!
+Resolved studentId: 9
+Insert params: bookId=16, studentId=9, now=2025-06-10 12:39:52, due=2025-06-24 12:39:52
+Insert success!
+Resolved studentId: 9
+Insert params: bookId=18, studentId=9, now=2025-06-10 13:08:40, due=2025-06-24 13:08:40
+Insert success!
+Resolved studentId: 9
+Insert params: bookId=15, studentId=9, now=2025-06-10 13:08:56, due=2025-06-24 13:08:56
+Insert success!
+Resolved studentId: 6
+Insert params: bookId=14, studentId=6, now=2025-06-10 13:15:40, due=2025-06-24 13:15:40
+Insert success!

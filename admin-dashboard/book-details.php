@@ -30,10 +30,10 @@ $imgPath = !empty($book['background_image']) ? $book['background_image'] : '../a
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library | Book Details</title>
+    <link rel="stylesheet" href="../node_modules/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
-    <link rel="stylesheet" href="../node_modules/sweetalert2/dist/sweetalert2.min.css">
 </head>
 <body>
 
@@ -64,20 +64,24 @@ $obj -> adminDashboardFooter();
     });
 
     // SweetAlert for Update
-    document.getElementById('updateBtn').addEventListener('click', function(e) {
-      Swal.fire({
-        title: 'Update Book?',
-        text: 'Are you sure you want to update this book? Changes will be saved.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, update',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          e.target.closest('form').submit();
-        }
+    var updateBtn = document.getElementById('updateBtn');
+    if (updateBtn) {
+      updateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Update Book?',
+          text: 'Are you sure you want to update this book? Changes will be saved.',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, update',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            e.target.closest('form').submit();
+          }
+        });
       });
-    });
+    }
 
     <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
     Swal.fire({
@@ -90,23 +94,25 @@ $obj -> adminDashboardFooter();
   <?php endif; ?>
 
     // SweetAlert for Delete
-    document.getElementById('deleteBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      Swal.fire({
-        title: 'Delete Book?',
-        text: 'This action cannot be undone. Are you sure you want to delete this book?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = 'delete-book.php?id=<?= urlencode($book['id']) ?>';
-        }
-
-        
+    var deleteBtn = document.getElementById('deleteBtn');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Delete Book?',
+          text: 'This action cannot be undone. Are you sure you want to delete this book?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = 'delete-book.php?id=<?= urlencode($book['id']) ?>';
+          }
+        });
       });
-    });
+      
+    }
   });
 </script>
 </body>

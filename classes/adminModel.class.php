@@ -2,7 +2,7 @@
 
 class AdminModel extends connection {
     
-    public function InsertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description){
+    public function InsertBook($background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description, $status = 'Available'){
         $sql = "SELECT * FROM books WHERE isbn = ?";
         $stmt = $this->view()->prepare($sql);
         $stmt->execute([$isbn]);
@@ -11,14 +11,12 @@ class AdminModel extends connection {
             echo "<br> Book already exists";
         }
         else{
-            $sql = "INSERT INTO books(background_image, isbn, book_title, author, publisher, publication_year, genre, language, description) VALUES(?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO books(background_image, isbn, book_title, author, publisher, publication_year, genre, language, description, status) VALUES(?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->view()->prepare($sql);
-            $stmt->execute([$background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description]);
+            $stmt->execute([$background_image, $isbn, $book_title, $author, $publisher, $publication_year, $genre, $language, $description, $status]);
             // echo "<br> Book added successfully";
             header('Location: add-book.php?added=1');
         }
-
-
     }
 
     public function getAllBooks() {
@@ -46,5 +44,25 @@ class AdminModel extends connection {
         $stmt = $this->view()->prepare($sql);
         return $stmt->execute([$id]);
     }
+
+    public function deleteAccount($id){
+        $sql = "DELETE FROM registrations WHERE id = ?";
+        $stmt = $this->view()->prepare($sql);
+        return $stmt->execute([$id]);
+    }
+    public function getAllAccounts(){
+        $sql = "SELECT * FROM registrations ORDER BY id DESC";
+        $stmt = $this->view()->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getAccountById($id){
+        $sql = "SELECT * FROM registrations WHERE id = ? LIMIT 1";
+        $stmt = $this->view()->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
 
 }

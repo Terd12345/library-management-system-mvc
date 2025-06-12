@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library | Add Book</title>
+    <title>Library | Accounts</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
@@ -23,61 +23,28 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 </head>
 <body>
+              
+               
 
-
-<?php
-
+    <?php
+    
     include '../includes/classloader.inc.php';
-
-    $obj = new IndexView();   
-
-    $obj -> adminDashboardHeader();
     
-    $obj -> adminAddBook();
+    $obj = new IndexView();
+
+    $obj->adminDashboardHeader();
     
-    $obj -> adminDashboardFooter();
-
-?>
-
+    $obj->adminManageAccount();
+    
+    $obj->adminDashboardFooter();
+    
+    ?>   
     
     
-<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
-<script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-<script src="../assets/js/add-book.js"></script>
 
-<?php if (isset($_GET['added']) && $_GET['added'] == 1): ?>
-<script>
-Swal.fire({
-  icon: 'success',
-  title: 'Book added!',
-  text: 'The book has been added successfully.',
-  timer: 2000,
-  showConfirmButton: false
-});
-window.history.replaceState({}, document.title, window.location.pathname + window.location.search.replace(/([&?])added=1(&)?/, function(match, p1, p2) {
-  if (p2) return p1;
-  return '';
-}));
-</script>
-<?php endif; ?>
-
-
-<?php if (isset($_GET['deleted']) && $_GET['deleted'] == 1): ?>
-<script>
-Swal.fire({
-  icon: 'success',
-  title: 'Book deleted!',
-  text: 'The book has been deleted successfully.',
-  timer: 2000,
-  showConfirmButton: false
-});
-window.history.replaceState({}, document.title, window.location.pathname + window.location.search.replace(/([&?])deleted=1(&)?/, function(match, p1, p2) {
-  if (p2) return p1;
-  return '';
-}));
-</script>
-<?php endif; ?>
-
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../assets/js/add-book.js"></script>
 
 <!-- DataTables JS -->
       <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -92,7 +59,6 @@ window.history.replaceState({}, document.title, window.location.pathname + windo
               info: true
           });
           });
-      </script>
-
+      </script> 
 </body>
 </html>
