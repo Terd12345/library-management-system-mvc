@@ -39,7 +39,13 @@ class IndexView {
             <div class="gray-hero-box">
                 <h1 class="hero">Library Management System</h1>
                 <h2 class="hero">"In the digital age, an online library management system isnt just a convenience; its the key to <br>unlocking a world of knowledge for everyone, everywhere."</h2>
-                <div class="call"><span>Explore Now</span></div>
+                <a href="register.php" target="_blank" class="call-link">
+                  <div class="call">
+                    <span>Explore Now</span>
+                  </div>
+                </a>
+                </div>
+
             </div>
             </div>
         </div>
@@ -176,7 +182,7 @@ class IndexView {
             <span class="feature side">Romeo V. Eustaquio III</span><span class="side"> - Student</span>
             <p class="side">“I can now find the books I need without walking all over campus. The notifications help me return books on time!”</p>
             </div>
-            <div class="group margin"></div>
+            <div class="group"></div>
             <div class="col two bg margin extrapad">
             <h1 class="icon side">📖</h1>
             <span class="feature side">Library Staff</span><span class="side"> - Coordinator</span>
@@ -252,47 +258,80 @@ class IndexView {
     }
 
     public function contactPage(){
-
+        // Handle form submission and send email via PHPMailer
+        $success = '';
+        $error = '';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['email'], $_POST['message'])) {
+            $name = trim($_POST['name']);
+            $email = trim($_POST['email']);
+            $message = trim($_POST['message']);
+            // Load PHPMailer
+            require_once __DIR__ . '/../vendor/autoload.php';
+            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                //Server settings
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'romeov.eustaquioiii@gmail.com'; 
+                $mail->Password   = 'bjsf hibw qrsm tdty';    
+                $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
+                //Recipients
+                $mail->setFrom($email, $name);
+                $mail->addAddress('romeov.eustaquioiii@gmail.com', 'Library Admin'); // <-- CHANGE THIS
+                //Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Library Contact Form Message';
+                $mail->Body    = '<b>Name:</b> ' . htmlspecialchars($name) . '<br><b>Email:</b> ' . htmlspecialchars($email) . '<br><b>Message:</b><br>' . nl2br(htmlspecialchars($message));
+                $mail->AltBody = "Name: $name\nEmail: $email\nMessage:\n$message";
+                $mail->send();
+                $success = 'Message sent successfully! We will get back to you soon.';
+            } catch (Exception $e) {
+                $error = 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
+            }
+        }
         echo '
-        
         <div class="section">
-    <div class="slider">
-        <div class="container slidercontent">
-            <div class="gray-hero-box">
-                <h1 class="hero">Contact Us</h1>
-                <h2 class="hero">Wed love to hear from you! Reach out to us for any inquiries or support.</h2>
+        <div class="slider">
+            <div class="container slidercontent">
+                <div class="gray-hero-box">
+                    <h1 class="hero">Contact Us</h1>
+                    <h2 class="hero">We\'d love to hear from you! Reach out to us for any inquiries or support.</h2>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="section bg">
-    <div class="container">
-        <h1>Get in Touch</h1>
-        <form action="process_contact.php" method="POST" class="contact-form">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+    <div class="section bg">
+        <div class="container">
+            <h1>Get in Touch</h1>';
+        if ($success) {
+            echo '<div class="alert alert-success">' . $success . '</div>';
+        }
+        if ($error) {
+            echo '<div class="alert alert-danger">' . $error . '</div>';
+        }
+        echo '<form action="" method="POST" class="contact-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="email">Your Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                <div class="d-flex mt-3">
+                    <button type="submit" class="btn-primary">Send Message</button>
                 </div>
-                <div class="col-12">
-                    <label for="message">Your Message</label>
-                    <textarea id="message" name="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
-                </div>
-            </div>
-            <div class="d-flex mt-3">
-                <button type="submit" class="btn-primary">Send Message</button>
-            </div>
-        </form>
-    </div>
-</div>
-        
-        ';
-
+            </form>
+        </div>
+    </div>';
     }
 
 
@@ -538,18 +577,15 @@ class IndexView {
             <li class="nav-item">
               <a class="nav-link ' . ($currentPage === "borrowed-books.php" ? "active" : "") . '" href="borrowed-books.php">Borrowed Books</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link ' . ($currentPage === "notifications.php" ? "active" : "") . '" href="notifications.php">Notifications</a>
-            </li>
+            
           </ul>
 
           <div class="d-flex align-items-center gap-3">
             <div class="dropdown">
               <img src="" class="avatar dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" role="button" />
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">👤 Profile</a></li>
-                <li><a class="dropdown-item" href="#">⚙️ Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
+                
+              
                 <li><a class="dropdown-item text-danger" href="../logout.php">🚪 Logout</a></li>
               </ul>
             </div>
@@ -562,6 +598,31 @@ class IndexView {
 
 
     public function libraryDashboardMain() {
+    // Get current user id (try both user_id and stud_id)
+    $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    if (!$userId && isset($_SESSION['stud_id'])) {
+        $userId = $_SESSION['stud_id'];
+    }
+    require_once '../classes/libraryModel.class.php';
+    $model = new LibraryModel();
+    $studentId = $model->resolveRegistrationId($userId);
+
+    // Fetch all borrowed books for this user
+    $books = $studentId ? $model->getBorrowedBooksByStudentId($studentId) : [];
+    $now = date('Y-m-d');
+    $endOfWeek = date('Y-m-d', strtotime('sunday this week'));
+    $borrowedCount = count($books);
+    $dueThisWeek = 0;
+    $overdue = 0;
+    foreach ($books as $book) {
+        $dueDate = substr($book['due_date'], 0, 10);
+        if ($dueDate >= $now && $dueDate <= $endOfWeek) {
+            $dueThisWeek++;
+        }
+        if ($dueDate < $now) {
+            $overdue++;
+        }
+    }
     echo '
     <!-- Dashboard Section -->
     <main class="container mt-4">
@@ -570,27 +631,22 @@ class IndexView {
         <div class="col-md-3 col-sm-6">
           <div class="dashboard-card">
             <h6>Books Borrowed</h6>
-            <h3>4</h3>
+            <h3>' . $borrowedCount . '</h3>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
           <div class="dashboard-card">
             <h6>Due This Week</h6>
-            <h3>1</h3>
+            <h3>' . $dueThisWeek . '</h3>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
           <div class="dashboard-card">
             <h6>Overdue Books</h6>
-            <h3 class="text-danger">2</h3>
+            <h3 class="text-danger">' . $overdue . '</h3>
           </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="dashboard-card">
-            <h6>Total Fines</h6>
-            <h3 class="text-warning">₱120</h3>
-          </div>
-        </div>
+       
       </div>
     </main>
     ';
@@ -637,6 +693,127 @@ echo '</div>';
     }
 
 
+    public function borrowedBooks() {
+   
+
+    // Get current user id (try both user_id and stud_id)
+    $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    if (!$userId && isset($_SESSION['stud_id'])) {
+        $userId = $_SESSION['stud_id'];
+    }
+
+    require_once '../classes/libraryModel.class.php';
+    $model = new LibraryModel();
+    $studentId = $model->resolveRegistrationId($userId);
+
+    $books = [];
+    if ($studentId) {
+        $books = $model->getBorrowedBooksByStudentId($studentId);
+    }
+
+    $obj = new IndexView();
+    $obj->libraryDashboardHeader();
+
+    // Handle return book POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['return_transaction_id'], $_POST['return_book_id'])) {
+        $transactionId = (int)$_POST['return_transaction_id'];
+        $bookId = (int)$_POST['return_book_id'];
+        $model->returnBook($transactionId, $bookId);
+        // Archive the transaction after returning
+        $model->archiveBorrowTransaction($transactionId);
+        header('Location: borrowed-books.php?success=returned');
+        exit();
+    }
+
+    echo <<<HTML
+    <div class="container mt-5 mb-5">
+        <h2 class="mb-4">My Borrowed Books</h2>
+HTML;
+
+    if (empty($books)) {
+        echo '<div class="alert alert-info">You have not borrowed any books.</div>';
+    } else {
+        echo <<<TABLE
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Borrowed At</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+TABLE;
+
+        foreach ($books as $book) {
+            $title = htmlspecialchars($book['book_title']);
+            $author = htmlspecialchars($book['author']);
+            $borrowedAt = htmlspecialchars($book['borrowed_at']);
+            $dueDate = htmlspecialchars($book['due_date']);
+            $transactionId = htmlspecialchars($book['transaction_id']);
+            $bookId = htmlspecialchars($book['id']);
+
+            echo "<tr>
+                    <td>{$title}</td>
+                    <td>{$author}</td>
+                    <td>{$borrowedAt}</td>
+                    <td>{$dueDate}</td>
+                    <td>";
+
+            if ($book['borrow_status'] === 'borrowed') {
+                echo <<<FORM
+                    <form method="post" class="return-form" style="display:inline;">
+                        <input type="hidden" name="return_transaction_id" value="{$transactionId}">
+                        <input type="hidden" name="return_book_id" value="{$bookId}">
+                        <button type="submit" class="btn btn-warning btn-sm">Return</button>
+                    </form>
+FORM;
+            } else {
+                echo '<span class="badge bg-secondary">Returned</span>';
+            }
+
+            echo "</td></tr>";
+        }
+
+        echo <<<CLOSE
+                </tbody>
+            </table>
+        </div>
+CLOSE;
+    }
+
+    echo "</div>";
+
+    // Add SweetAlert script if there are books
+    if (!empty($books)) {
+        echo '<script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>';
+        echo '<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("form.return-form").forEach(function(form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      Swal.fire({
+        title: "Return this book?",
+        text: "Are you sure you want to return this book? This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, return it!",
+        cancelButtonText: "Cancel",
+        customClass: {popup: "swal2-border-radius"}
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
+      });
+    });
+  });
+});
+</script>';
+    }
+}
     public function bookDetails($book)
 {
     $imgPath = !empty($book['background_image']) ? '../uploads/' . htmlspecialchars($book['background_image']) : '../assets/images/sample-book.jpg';
@@ -711,11 +888,10 @@ public function adminDashboardHeader(){
         <div class="title">Library Dashboard</div>
         <a href="index.php"><i class="fas fa-home"></i> <span class="d-none d-lg-inline">Home</span></a>
         <a href="add-book.php"><i class="fas fa-book"></i> <span class="d-none d-lg-inline">Add Books</span></a>
-        <a href="#"><i class="fas fa-arrow-right-from-bracket"></i> <span class="d-none d-lg-inline">Borrowed</span></a>
-        <a href="#"><i class="fas fa-rotate-left"></i> <span class="d-none d-lg-inline">Returned</span></a>
-        <a href="#"><i class="fas fa-calendar"></i> <span class="d-none d-lg-inline">Due Dates</span></a>
+        <a href="borrowed-books.php"><i class="fas fa-arrow-right-from-bracket"></i> <span class="d-none d-lg-inline">Borrowed</span></a>
+        <a href="returned-books.php"><i class="fas fa-rotate-left"></i> <span class="d-none d-lg-inline">Returned</span></a>
+        <a href="due-dates.php"><i class="fas fa-calendar"></i> <span class="d-none d-lg-inline">Due Dates</span></a>
         <a href="manage-accounts.php"><i class="fas fa-cogs"></i> <span class="d-none d-lg-inline">Manage Accounts</span></a>
-        <a href="#"><i class="fas fa-bell"></i> <span class="d-none d-lg-inline">Notifications</span></a>
          </div>
 
       <div class="header">
@@ -727,9 +903,6 @@ public function adminDashboardHeader(){
             <div class="dropdown">
               <img src="" class="avatar dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" role="button" />
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">👤 Profile</a></li>
-                <li><a class="dropdown-item" href="#">⚙️ Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="../logout.php">🚪 Logout</a></li>
               </ul>
             </div>
@@ -744,58 +917,88 @@ public function adminDashboardHeader(){
 
 
     public function adminDashboardMain(){
-
-      echo '
- 
+        $model = new AdminModel();
+        $allBorrowed = $model->getAllBorrowedBooksWithUsers();
+        $now = date('Y-m-d');
+        $dueSoonDays = 7;
+        $dueSoonList = [];
+        foreach ($allBorrowed as $row) {
+            $dueDate = substr($row['due_date'], 0, 10);
+            if ($dueDate >= $now && $dueDate <= date('Y-m-d', strtotime("+{$dueSoonDays} days"))) {
+                $dueSoonList[] = $row;
+            }
+        }
+        $totalBorrowed = count($allBorrowed);
+        $totalDueSoon = count($dueSoonList);
+        echo '
         <div class="wrapper">
-    <main class="main-content">
-      <!-- Breadcrumbs -->
-      <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-        </ol>
-      </nav>
-      <div class="row g-4">
-        <div class="col-md-4 col-sm-6">
-          <div class="card p-4">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-book fa-2x text-primary me-3"></i>
-              <div>
-                <h6 class="mb-0">Books Borrowed</h6>
-                <p class="mb-0 fw-bold">4</p>
+        <main class="main-content">
+          <!-- Breadcrumbs -->
+          <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+          </nav>
+          <div class="row g-4">
+            <div class="col-md-4 col-sm-6">
+              <div class="card p-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-book fa-2x text-primary me-3"></i>
+                  <div>
+                    <h6 class="mb-0">Books Borrowed</h6>
+                    <p class="mb-0 fw-bold">' . $totalBorrowed . '</p>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <h6 class="fw-bold">Borrowers:</h6>';
+                    if ($totalBorrowed === 0) {
+                        echo '<div class="text-muted">No books currently borrowed.</div>';
+                    } else {
+                        echo '<ul class="list-group">';
+                        foreach ($allBorrowed as $row) {
+                            echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
+                                . htmlspecialchars($row['full_name']) .
+                                ' <span class="badge bg-primary">' . htmlspecialchars($row['book_title']) . '</span>' .
+                                '</li>';
+                        }
+                        echo '</ul>';
+                    }
+                echo '</div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-md-4 col-sm-6">
-          <div class="card p-4">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-clock fa-2x text-warning me-3"></i>
-              <div>
-                <h6 class="mb-0">Due Soon</h6>
-                <p class="mb-0 fw-bold">2</p>
+            <div class="col-md-4 col-sm-6">
+              <div class="card p-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-clock fa-2x text-warning me-3"></i>
+                  <div>
+                    <h6 class="mb-0">Due Soon</h6>
+                    <p class="mb-0 fw-bold">' . $totalDueSoon . '</p>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <h6 class="fw-bold">Due Soon List:</h6>';
+                    if ($totalDueSoon === 0) {
+                        echo '<div class="text-muted">No books due soon.</div>';
+                    } else {
+                        echo '<ul class="list-group">';
+                        foreach ($dueSoonList as $row) {
+                            echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
+                                . htmlspecialchars($row['full_name']) .
+                                ' <span class="badge bg-warning text-dark">' . htmlspecialchars($row['book_title']) . '</span>' .
+                                ' <span class="ms-2 small text-muted">Due: ' . htmlspecialchars(date('M d, Y', strtotime($row['due_date']))) . '</span>' .
+                                '</li>';
+                        }
+                        echo '</ul>';
+                    }
+                echo '</div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-md-4 col-sm-12">
-          <div class="card p-4">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-envelope fa-2x text-info me-3"></i>
-              <div>
-                <h6 class="mb-0">Messages</h6>
-                <p class="mb-0 fw-bold">3</p>
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
-      </div>
-      ';
-
+        </main>
+        </div>';
     }
 
 
@@ -934,39 +1137,6 @@ public function adminDashboardHeader(){
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    </div>';
-}
-
-
-  public function adminBookDetails($book, $imgPath) {
-    echo '
-    <div class="wrapper">
-        <div class="main-content">
-            <!-- Breadcrumbs -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="add-book.php">Add Book</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Book Details</li>
-                </ol>
-            </nav>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h1>Book Details</h1>
-                    <form action="update-book.php?id=' . urlencode($book['id']) . '" method="post" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-4 text-center mb-3 d-flex flex-column align-items-center justify-content-center">
-                                <label for="book_image_input" style="cursor:pointer;">
-                                    <img src="' . htmlspecialchars($imgPath) . '" alt="Book Image" id="bookImagePreview" class="img-thumbnail mb-2" style="width: 180px; height: 180px; object-fit: cover;">
-                                    <div class="mt-2 text-muted">Click to change image</div>
-                                </label>
-                                <input type="file" id="book_image_input" name="book_image" accept="image/*" style="display:none;">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="isbn" class="form-label">ISBN</label>
                                         <input type="text" class="form-control" id="isbn" name="isbn" value="' . htmlspecialchars($book['isbn']) . '" disabled>
@@ -1014,6 +1184,72 @@ public function adminDashboardHeader(){
     </div>';
 }
 
+
+    public function adminBorrowedBooks(){
+
+      $model = new AdminModel();
+      $borrowedBooks = $model->getAllBorrowedBooksWithUsers();
+
+      echo '
+      
+      <div class="wrapper">
+        <div class="main-content">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Borrowed Books</li>
+                </ol>
+            </nav>';
+
+
+            echo '
+    <div class="container mt-4 mb-5">
+        <h2 class="mb-4">All Borrowed Books</h2>
+        <div class="table-responsive">
+            <table id="borrowedBooksTable" class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Book ISBN</th>
+                        <th>Book Title</th>
+                        <th>Borrowed Date</th>
+                        <th>Return Date (Expected)</th>
+                        <th>Status</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                    </tr>
+                </thead>
+                <tbody>';
+                
+    foreach ($borrowedBooks as $row) {
+        echo '
+                    <tr>
+                        <td>' . htmlspecialchars($row['isbn']) . '</td>
+                        <td>' . htmlspecialchars($row['book_title']) . '</td>
+                        <td>' . htmlspecialchars($row['borrowed_at']) . '</td>
+                        <td>' . htmlspecialchars($row['due_date']) . '</td>
+                        <td>' . htmlspecialchars(ucfirst($row['borrow_status'])) . '</td>
+                        <td>' . htmlspecialchars($row['stud_id']) . '</td>
+                        <td>' . htmlspecialchars($row['full_name']) . '</td>
+                    </tr>';
+    }
+
+    echo '
+                </tbody>
+            </table>
+        </div>
+    </div>';
+
+
+      
+      echo '
+
+      </div>
+      </div>
+      
+      ';
+
+    }
 
     public function adminManageAccount(){
 
@@ -1066,6 +1302,67 @@ public function adminDashboardHeader(){
     echo '</tbody></table></div></div></div></div></div>';
     }
 
+
+    public function adminReturnedBooks(){
+
+      $model = new AdminModel();
+      $returnedBooks = $model->getAllReturnedBooksWithUsers();
+
+      echo '
+      
+      <div class="wrapper">
+      <main class="main-content">
+      <!-- Breadcrumbs -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Returned Books</li>
+        </ol>
+      </nav>
+
+      <div class="container mt-4 mb-5">
+    <h2 class="mb-4">All Returned Books</h2>
+    <div class="table-responsive">
+        <table id="returnedBooksTable" class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Book ISBN</th>
+                    <th>Book Title</th>
+                    <th>Borrowed Date</th>
+                    <th>Return Date (Expected)</th>
+                    <th>Returned At</th>
+                    <th>Status</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+            foreach ($returnedBooks as $row):
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($row['isbn']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['book_title']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['borrowed_at']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['due_date']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['returned_at']) . '</td>';
+                echo '<td>' . htmlspecialchars(ucfirst($row['borrow_status'])) . '</td>';
+                echo '<td>' . htmlspecialchars($row['stud_id']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['full_name']) . '</td>';
+                echo '</tr>';
+            endforeach;
+
+echo '
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>
+      </main>
+      ';
+
+    }
 
     public function adminAccountDetails($account){
 
@@ -1162,6 +1459,55 @@ public function adminDashboardHeader(){
         </div>
       </div>';
     }
+
+    public function adminDueDates($overdueBooks) {
+
+      $model = new AdminModel();
+      $overdueBooks = $model->getAllOverdueBooksWithUsers();
+
+    echo <<<HTML
+    <div class="container mt-4 mb-5">
+        <h2 class="mb-4">Overdue Books</h2>
+        <div class="table-responsive">
+            <table id="overdueBooksTable" class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Book ISBN</th>
+                        <th>Book Title</th>
+                        <th>Borrowed Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Student ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+    HTML;
+
+    foreach ($overdueBooks as $row) {
+        echo "<tr>
+                <td>" . htmlspecialchars($row['isbn']) . "</td>
+                <td>" . htmlspecialchars($row['book_title']) . "</td>
+                <td>" . htmlspecialchars($row['borrowed_at']) . "</td>
+                <td>" . htmlspecialchars($row['due_date']) . "</td>
+                <td><span class='badge bg-danger'>Overdue</span></td>
+                <td>" . htmlspecialchars($row['stud_id']) . "</td>
+            </tr>";
+    }
+
+    echo <<<HTML
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('#overdueBooksTable').DataTable();
+    });
+    </script>
+    HTML;
+}
+
 
 
     public function adminDashboardFooter(){

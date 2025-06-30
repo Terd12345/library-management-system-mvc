@@ -19,20 +19,49 @@ body {
   overflow: hidden;  
 }
 
-.container.slidercontent {
-  background-image: url('../images/library.jpg'); /* Replace with your image path */
-  background-size: cover; /* Ensures the image covers the container */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
-  background-position: center 70%; /* Centers the image within the container */
-  padding: 50px 0; /* Optional: Add padding for better spacing */
+/* .container.slidercontent {
+  background-image: url('../images/library.jpg');
+  background-size: cover;
+  background-repeat: no-repeat; 
+  background-position: center 70%; 
+  padding: 50px 0; 
   width: 100%;
+} */
+
+
+.container.slidercontent {
+  position: relative;
+  background-image: url('../images/library.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 70%;
+  padding: 50px 0;
+  width: 100%;
+  z-index: 1;
+  color: white; /* Make text white for better visibility */
 }
 
-.gray-hero-box {
-  background-color: rgba(102, 50, 50, 0.3); /* semi-transparent gray */
+.container.slidercontent::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 51, 102, 0.5); /* Mild blue overlay */
+  z-index: -1;
+}
+
+
+/* .gray-hero-box {
+  background-color: rgba(102, 50, 50, 0.3); 
   padding: 20px;
   border-radius: 10px;
   margin: 3%;
+  text-align: center;
+} */
+
+.gray-hero-box {
+  position: relative;
+  z-index: 2;
   text-align: center;
 }
 
