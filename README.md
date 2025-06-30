@@ -16,7 +16,7 @@ User dashboard
 Admin dashboard
 ![image](https://github.com/user-attachments/assets/2ae48a72-e5eb-4270-ae81-ec7b40b41e0a)
 
-![image](https://github.com/user-attachments/assets/4a684220-0df5-4ea4-a68e-760df6c1d6ab)
+![image](https://github.com/user-attachments/assets/4255aae5-aa09-4fa3-ae59-2f17896ea075)
 
 ![image](https://github.com/user-attachments/assets/b35a3b2a-135d-4911-b4ae-bf162922451f)
 
