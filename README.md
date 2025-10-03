@@ -13,8 +13,6 @@ User dashboard
 
 ![image](https://github.com/user-attachments/assets/421ac007-53a2-44d9-b3e7-695576f1196a)
 
-Admin dashboard
-![image](https://github.com/user-attachments/assets/2ae48a72-e5eb-4270-ae81-ec7b40b41e0a)
 
 ![image](https://github.com/user-attachments/assets/4255aae5-aa09-4fa3-ae59-2f17896ea075)
 
@@ -24,5 +22,4 @@ Admin dashboard
 
 ![image](https://github.com/user-attachments/assets/2f2da20e-d505-4748-af50-a5c8cb9af5c5)
 
-![image](https://github.com/user-attachments/assets/b34944ee-f7d4-4bdd-b1a1-2f18e678a477)
 
